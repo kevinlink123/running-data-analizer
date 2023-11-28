@@ -9,7 +9,7 @@ For now there are a couple of reasons for a record to be considered suspicious:
 - If there is at least one field that doesn't have any data.
 - The BPM during the exercise session are below 100.
 - Step length is too short, below 0.5 mts.
-- Step length is too large, larger than 1.35 mts (en este articulo determinan que la distancia recorrida por un paso de un corredor profesional está entre 1.89 y 2.08 mts https://www.econathletes com/post/math-for-sprinters-steps-per-second-and-stride-length)
+- Step length is too large, larger than 1.35 mts (en este articulo determinan que la distancia recorrida por un paso de un corredor profesional está entre 1.89 y 2.08 mts https://www.econathletes.com/post/math-for-sprinters-steps-per-second-and-stride-length)
 
 ## Setup
 
