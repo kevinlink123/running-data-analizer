@@ -61,7 +61,6 @@ function App() {
                     newRow.splice(1, 0, reason ? reason : "Fine!");
                     return newRow;
                 });
-                console.log(_rowsData);
                 setHeaders(_headers);
                 setRowsData(_rowsData);
             },
@@ -124,10 +123,10 @@ function App() {
                 </div>
             )}
             <div className="file-pick-container h-full flex flex-col justify-center items-center">
-                <h1 className="text-xl font-semibold">
+                <h1 className="title text-xl font-semibold">
                     Please select a .csv file with the running data
                 </h1>
-                <h3 className="text-sm italic">
+                <h3 className="subtitle text-sm italic">
                     Click <span onClick={() => setModalOpen(true)} className="cursor-pointer underline">here</span>{" "}
                     to find out what data is needed
                 </h3>
@@ -146,7 +145,7 @@ function App() {
                         </div>
                     )}
                     <input
-                        className="hidden"
+                        className="csv-input hidden"
                         onChange={handleFileChange}
                         type="file"
                         name="file"
