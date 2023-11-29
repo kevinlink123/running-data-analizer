@@ -55,7 +55,7 @@ test("Should show an error message on screen if the user tries to analyze data w
     });
     
 
-    const errorMessage = screen.getByText('Please upload a file to analize it');
+    const errorMessage = screen.getByText('PLEASE UPLOAD A FILE TO ANALYZE IT');
 
     expect(errorMessage).toBeInTheDocument();
 });
@@ -82,6 +82,54 @@ test("Should show an error message on screen if the user tries to analyze data f
     expect(container.getElementsByClassName('filename-container').length).toBe(1);
     expect(fileTitleSelectedContainer.textContent).toBe(`Selected File : ${filename}`);
     expect(screen.getByText('ONLY .CSV FILES ARE ALLOWED')).toBeInTheDocument();
+})
+
+test('Should show an error message if the user tries to analyze a file with the wrong headers', async () => {
+    const { container } = render(<App />);
+
+    const mockRunningData = `asdasd,asdasd,f,g,hhhgh,jgjhghk`;
+
+    const filename = "wrong.csv"
+    const csvFile = new File([mockRunningData], filename, { type: 'text/csv' });
+
+    const input = screen.getByLabelText('Enter .csv file');
+
+    await act(async () => {
+        await userEvent.upload(input, csvFile);
+    });
+
+    const analyzeDataButton = screen.getByText('Analyze data');
+    await act(async () => {
+        await userEvent.click(analyzeDataButton);
+    });
+
+    await waitFor(async () => {
+        expect(screen.getByText('THE FORMAT OF THE DATA IS NOT CORRECT (MISSING HEADERS)')).toBeInTheDocument();
+    });
+})
+
+test('Should show an error message if the user tries to analyze a file that is empty', async () => {
+    const { container } = render(<App />);
+
+    const mockRunningData = ``;
+
+    const filename = "wrong.csv"
+    const csvFile = new File([mockRunningData], filename, { type: 'text/csv' });
+
+    const input = screen.getByLabelText('Enter .csv file');
+
+    await act(async () => {
+        await userEvent.upload(input, csvFile);
+    });
+
+    const analyzeDataButton = screen.getByText('Analyze data');
+    await act(async () => {
+        await userEvent.click(analyzeDataButton);
+    });
+
+    await waitFor(async () => {
+        expect(screen.getByText('THE FILE SHOULD NOT BE EMPTY')).toBeInTheDocument();
+    });
 })
 
 test("Should be render a grid after a .csv file is uploaded and the analyze button clicked", async () => {
@@ -118,5 +166,4 @@ test("Should be render a grid after a .csv file is uploaded and the analyze butt
     expect(container.getElementsByClassName('grid-container').length).toBe(1);
     expect(container.getElementsByClassName('filename-container').length).toBe(1);
     expect(fileTitleSelectedContainer.textContent).toBe(`Selected File : ${filename}`);
-
 })
