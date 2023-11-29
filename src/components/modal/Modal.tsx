@@ -45,6 +45,7 @@ export default function Modal({ children, handleClose }: ModalProps) {
                     {children}
                     <div className="absolute -top-4 -right-4">
                         <svg
+                            data-testid='closeButton'
                             onClick={handleClose}
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
