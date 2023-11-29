@@ -6,12 +6,13 @@ import "gridjs/dist/theme/mermaid.css";
 
 import Papa from "papaparse";
 
-import { ALLOWEDFILEEXTENSIONS, FIELDSINDEXES } from "./constants/app.contant";
+import { ALLOWEDFILEEXTENSIONS, FIELDSINDEXES, REQUIREDFIELDNAMES } from "./constants/app.contant";
 import Modal from "./components/modal/Modal";
 
 function App() {
     const [headers, setHeaders] = useState<string[]>([]);
     const [rowsData, setRowsData] = useState<string[][]>([]);
+    const [loadingData, setLoadingData] = useState(false);
     const [error, setError] = useState("");
 
     const [file, setFile] = useState<File>();
@@ -22,7 +23,7 @@ function App() {
 
     function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
         if (!e.target.files?.length) {
-            setError("File not entered");
+            setError("FILE NOT ENTERED");
             return;
         }
 
@@ -36,7 +37,7 @@ function App() {
 
     async function parseDataToGrid() {
         if (!file) {
-            setError("Please upload a file to analize it");
+            setError("PLEASE UPLOAD A FILE TO ANALYZE IT");
             return;
         }
 
@@ -47,7 +48,23 @@ function App() {
 
         Papa.parse(file, {
             complete: (results) => {
+                setLoadingData(true);
+                if(results.data.length === 0) {
+                    setError('THE FILE SHOULD NOT BE EMPTY');
+                    return;
+                }
                 const _headers = results.data[0] as string[];
+                const isSomeHeaderMissing = _headers.some((e, i) => {
+                    return !(REQUIREDFIELDNAMES[i as keyof typeof REQUIREDFIELDNAMES] === e);
+                });
+
+                if(isSomeHeaderMissing) {
+                    setError('THE FORMAT OF THE DATA IS NOT CORRECT (MISSING HEADERS)');
+                    return;
+                }
+
+                console.log(isSomeHeaderMissing);
+
                 _headers.splice(0, 0, "Suspicious");
                 _headers.splice(1, 0, "Reason");
 
@@ -63,6 +80,7 @@ function App() {
                 });
                 setHeaders(_headers);
                 setRowsData(_rowsData);
+                setLoadingData(false);
             },
         });
     }
@@ -100,7 +118,8 @@ function App() {
 
     return (
         <div className="App h-screen">
-            {!!rowsData.length && (
+            {!!rowsData.length && 
+                (loadingData ? <div>LOADING...</div> :
                 <div className="grid-container mx-10">
                     <Grid
                         data={rowsData}
@@ -120,8 +139,8 @@ function App() {
                             },
                         }}
                     />
-                </div>
-            )}
+                </div>)
+            }
             <div className="file-pick-container h-full flex flex-col justify-center items-center">
                 <h1 className="title text-xl font-semibold">
                     Please select a .csv file with the running data
