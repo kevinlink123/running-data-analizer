@@ -184,7 +184,7 @@ function App() {
                     )}
                     { modalOpen &&
                         <Modal handleClose={() => setModalOpen(false)}>
-                            <h1 className="text-2xl mb-8 uppercase font-medium">Datos Necesarios para el Analisis</h1>
+                            <h1 className="text-2xl mb-8 uppercase font-medium">Data Headers Needed for Analysis</h1>
 							<p className="my-2 mx-16 text-left"><span className="font-bold">ID</span>: The record's id</p>
 							<p className="my-2 mx-16 text-left"><span className="font-bold">UserID</span>: The id of the user that created the record</p>
 							<p className="my-2 mx-16 text-left"><span className="font-bold">StartTimeInSeconds</span>: The timestamp of the record</p>
